@@ -1,0 +1,12 @@
+name: chars
+parent: default
+
+matches:
+  - trigger: ":eur"
+    replace: "€"
+  - trigger: ":gbp"
+    replace: "£"
+  - trigger: ":usd"
+    replace: "$"
+  - trigger: ":deg"
+    replace: "°"

@@ -1,0 +1,18 @@
+name: commands
+parent: default
+
+matches:
+  - trigger: ":ip"
+    replace: "{{output}}"
+    vars:
+      - name: output
+        type: shell
+        params:
+          cmd: "curl https://ifconfig.io/"
+  - trigger: ":weather"
+    replace: "{{output}}"
+    vars:
+      - name: output
+        type: shell
+        params:
+          cmd: "curl 'http://wttr.in/?format=3'"

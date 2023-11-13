@@ -1,0 +1,20 @@
+name: template
+parent: default
+
+matches:
+  - trigger: ":template"
+    replace: "My Template Text"
+  - trigger: ":date"
+    replace: "{{date}}"
+    vars:
+      - name: date
+        type: date
+        params:
+          format: "%m/%d/%Y"
+  - trigger: ":shell"
+    replace: "{{output}}"
+    vars:
+      - name: output
+        type: shell
+        params:
+          cmd: "echo 'Hello from your shell'"
