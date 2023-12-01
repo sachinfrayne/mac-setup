@@ -11,6 +11,7 @@ vscode_install_extension() {
 }
 
 vscode_install_extension adpyke.vscode-sql-formatter
+vscode_install_extension appliedengdesign.vscode-gcode-syntax
 vscode_install_extension asciidoctor.asciidoctor-vscode
 vscode_install_extension buster.ndjson-colorizer
 vscode_install_extension dbaeumer.vscode-eslint
