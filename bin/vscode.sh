@@ -29,6 +29,8 @@ vscode_install_extension stkb.rewrap
 vscode_install_extension xabikos.reactsnippets
 vscode_install_extension yzhang.markdown-all-in-one
 
+mkdir -p ${HOME}/Library/Application\ Support/Code/User/snippets
+
 tee ${HOME}/Library/Application\ Support/Code/User/snippets/bash-file-header.code-snippets <<-'EOF' >/dev/null
 {
   "Bash File Header": {
