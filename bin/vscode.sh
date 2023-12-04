@@ -2,10 +2,10 @@
 
 brew_install_cask visual-studio-code
 
-array=($(code --list-extensions | tr '[:upper:]' '[:lower:]'))
+EXTENSIONS=($(code --list-extensions | tr '[:upper:]' '[:lower:]'))
 
 vscode_install_extension() {
-  if ! [[ "${array[@]}" =~ "$1" ]]; then
+  if [[ ${#EXTENSIONS[@]} -eq 0 || ! " ${EXTENSIONS[@]} " =~ " $1 " ]]; then
     code --install-extension $1
   fi
 }
