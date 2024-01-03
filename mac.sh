@@ -11,10 +11,10 @@ EXAMPLE
        ./mac -b alfred
 
 OPTIONS
-
        -h        Help
        -b        The binary of the software/settings to install, for example, -b alfred
        -l        List the software/settings that can be installed
+       
 "
 }
 
