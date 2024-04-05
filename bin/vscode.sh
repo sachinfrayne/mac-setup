@@ -19,11 +19,13 @@ vscode_install_extension dotjoshjohnson.xml
 vscode_install_extension esbenp.prettier-vscode
 vscode_install_extension fbaligand.vscode-logstash-editor
 vscode_install_extension foxundermoon.shell-format
+vscode_install_extension github.copilot
 vscode_install_extension humao.rest-client
 vscode_install_extension mechatroner.rainbow-csv
 vscode_install_extension ms-azuretools.vscode-docker
 vscode_install_extension ms-python.python
 vscode_install_extension ms-vscode-remote.remote-containers
+vscode_install_extension randomchance.logstash
 vscode_install_extension ria.elastic
 vscode_install_extension statiolake.vscode-rustfmt
 vscode_install_extension stkb.rewrap
@@ -69,6 +71,9 @@ tee ${HOME}/Library/Application\ Support/Code/User/settings.json <<-'EOF' >/dev/
   },
   "[ignore]": {
     "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "[logstash]": {
+    "editor.defaultFormatter": "fbaligand.vscode-logstash-editor"
   },
   "[shellscript]": {
     "editor.defaultFormatter": "foxundermoon.shell-format"
