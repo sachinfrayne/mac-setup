@@ -25,10 +25,12 @@ vscode_install_extension mechatroner.rainbow-csv
 vscode_install_extension ms-azuretools.vscode-docker
 vscode_install_extension ms-python.python
 vscode_install_extension ms-vscode-remote.remote-containers
+vscode_install_extension oderwat.indent-rainbow
 vscode_install_extension randomchance.logstash
 vscode_install_extension ria.elastic
 vscode_install_extension statiolake.vscode-rustfmt
 vscode_install_extension stkb.rewrap
+vscode_install_extension vscode-icons-team.vscode-icons
 vscode_install_extension xabikos.reactsnippets
 vscode_install_extension yzhang.markdown-all-in-one
 
