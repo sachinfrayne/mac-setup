@@ -23,3 +23,10 @@ matches:
         type: shell
         params:
           cmd: "date +'%Y-%m-%dT%H:%M:%SZ'"
+  - trigger: ":date"
+    replace: "{{output}}"
+    vars:
+      - name: output
+        type: shell
+        params:
+          cmd: "date +'%Y-%m-%d'"
