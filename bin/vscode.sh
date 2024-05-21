@@ -15,6 +15,7 @@ vscode_install_extension appliedengdesign.vscode-gcode-syntax
 vscode_install_extension asciidoctor.asciidoctor-vscode
 vscode_install_extension buster.ndjson-colorizer
 vscode_install_extension dbaeumer.vscode-eslint
+vscode_install_extension donjayamanne.githistory
 vscode_install_extension dotjoshjohnson.xml
 vscode_install_extension esbenp.prettier-vscode
 vscode_install_extension fbaligand.vscode-logstash-editor
