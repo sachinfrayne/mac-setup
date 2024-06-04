@@ -50,6 +50,7 @@ alias docker_stop='pkill -SIGHUP -f /Applications/Docker.app "docker serve"'
 alias finder='open .'
 alias grep='grep --color=auto'
 alias history='history -in'
+alias hgrep='history -in 0|grep'
 alias k=kubectl
 alias ll='ls -lah'
 alias ls='ls -G'
@@ -62,10 +63,6 @@ alias tailf='tail -f'
 
 function cheat () {
   curl "https://cheat.sh/$1?style=default"
-}
-
-if [[ -f ./custom.zshrc ]] {
-    source ./custom.zshrc
 }
 
 EOF
