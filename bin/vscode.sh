@@ -21,6 +21,7 @@ vscode_install_extension esbenp.prettier-vscode
 vscode_install_extension fbaligand.vscode-logstash-editor
 vscode_install_extension foxundermoon.shell-format
 vscode_install_extension github.copilot
+vscode_install_extension golang.go
 vscode_install_extension hashicorp.terraform
 vscode_install_extension humao.rest-client
 vscode_install_extension mechatroner.rainbow-csv
