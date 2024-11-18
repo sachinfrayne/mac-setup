@@ -1,8 +1,0 @@
-name: mispellings
-parent: default
-
-matches:
-  - trigger: "clsuter"
-    replace: "cluster"
-    propagate_case: true
-    word: true

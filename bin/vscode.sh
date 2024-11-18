@@ -13,6 +13,7 @@ vscode_install_extension() {
 vscode_install_extension adpyke.vscode-sql-formatter
 vscode_install_extension appliedengdesign.vscode-gcode-syntax
 vscode_install_extension asciidoctor.asciidoctor-vscode
+vscode_install_extension ban.spellright
 vscode_install_extension buster.ndjson-colorizer
 vscode_install_extension dbaeumer.vscode-eslint
 vscode_install_extension donjayamanne.githistory
@@ -113,6 +114,10 @@ tee ${HOME}/Library/Application\ Support/Code/User/keybindings.json <<-'EOF' >/d
       "command": "editor.action.duplicateSelection"
   }
 ]
+EOF
+
+tee ${HOME}/Library/Application\ Support/Code/User/spellright.dict <<-'EOF' >/dev/null
+Elasticsearch
 EOF
 
 if brew ls --versions "duti" >/dev/null; then

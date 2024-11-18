@@ -1,6 +1,0 @@
-name: elasticsearch
-parent: default
-
-matches:
-  - trigger: ":esscale"
-    replace: "It is better to scale Elasticsearch vertically until it gets to around 30GB heap, only then should we scale horizontally. In general 3 nodes with 30GB heap each, will perform better than 6 nodes with 15GB each."
