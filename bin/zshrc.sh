@@ -7,6 +7,8 @@ HISTFILE=${HOME}/.zsh_history
 HISTSIZE=9999999
 SAVEHIST=9999999
 
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
 setopt EXTENDED_HISTORY
 setopt HIST_REDUCE_BLANKS
 setopt INC_APPEND_HISTORY
