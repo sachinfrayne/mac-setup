@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-brew_install zed
-
 mkdir -p ${HOME}/.config/zed
 tee ${HOME}/.config/zed/settings.json <<-'EOF' >/dev/null
 {

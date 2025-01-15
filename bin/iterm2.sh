@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-brew_install_cask iterm2
-
 defaults write com.googlecode.iterm2 "Normal Font" -string "Hack Nerd Font"
 defaults write com.googlecode.iterm2 "Non Ascii Font" -string "Hack Nerd Font"
 
