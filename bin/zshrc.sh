@@ -15,7 +15,6 @@ setopt INC_APPEND_HISTORY
 setopt SHARE_HISTORY
 
 export PATH="$PATH:/Applications/Docker.app/Contents/Resources/bin/"
-export PATH=$PATH:$(go env GOPATH)/bin
 
 source ${HOME}/.zsh/custom/plugins/powerlevel10k/powerlevel10k.zsh-theme
 source ${HOME}/.zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh

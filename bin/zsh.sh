@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 
 function git_clone() {
-  if [[ ! -d $2 ]]
-  then
+  if [[ ! -d $2 ]]; then
     git clone $1 $2
   else
-    (cd $2 && git pull)
+    (cd $2 && git pull >/dev/null 2>&1)
   fi
 }
 
