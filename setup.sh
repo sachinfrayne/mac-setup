@@ -22,7 +22,6 @@ brew_install_cask() {
   fi
 }
 
-brew_install_cask alfred
 brew_install_cask alt-tab
 brew_install_cask devtoys
 brew_install_cask docker
@@ -31,6 +30,7 @@ brew_install_cask font-hack-nerd-font
 brew_install_cask iterm2
 brew_install_cask lens
 brew_install_cask postman
+brew_install_cask raycast
 brew_install_cask visual-studio-code
 brew_install_cask zed
 
