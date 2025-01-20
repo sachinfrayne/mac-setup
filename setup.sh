@@ -29,6 +29,7 @@ brew_install_cask espanso
 brew_install_cask font-hack-nerd-font
 brew_install_cask iterm2
 brew_install_cask lens
+brew_install_cask lulu
 brew_install_cask postman
 brew_install_cask raycast
 brew_install_cask visual-studio-code
