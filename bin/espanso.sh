@@ -9,3 +9,7 @@ matches:
   - trigger: ":espanso"
     replace: "Hi there!"
 EOF
+
+tee ${HOME}/Library/Application\ Support/espanso/config/default.yml <<-'EOF' >/dev/null
+search_shortcut: off
+EOF
