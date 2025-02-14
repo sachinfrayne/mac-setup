@@ -66,4 +66,6 @@ function cheat () {
   curl "https://cheat.sh/$1?style=default"
 }
 
+source ~/.zsh/.zlocal
+
 EOF
