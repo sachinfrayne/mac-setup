@@ -14,7 +14,13 @@ setopt HIST_REDUCE_BLANKS
 setopt INC_APPEND_HISTORY
 setopt SHARE_HISTORY
 
+# DOCKER
 export PATH="$PATH:/Applications/Docker.app/Contents/Resources/bin/"
+
+# NVM
+export NVM_DIR="$HOME/.nvm"
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
 
 source ${HOME}/.zsh/custom/plugins/powerlevel10k/powerlevel10k.zsh-theme
 source ${HOME}/.zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
@@ -58,7 +64,7 @@ alias ll='ls -lah'
 alias ls='ls -G'
 alias mkdir='mkdir -pv'
 alias mv='mv -iv'
-alias python='/opt/homebrew/bin/python3'
+alias python='/opt/homebrew/bin/python3.12'
 alias reset_coreaudio='sudo killall coreaudiod'
 alias tailf='tail -f'
 
