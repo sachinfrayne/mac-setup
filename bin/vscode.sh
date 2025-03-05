@@ -15,6 +15,7 @@ vscode_install_extension ban.spellright
 vscode_install_extension buster.ndjson-colorizer
 vscode_install_extension dbaeumer.vscode-eslint
 vscode_install_extension donjayamanne.githistory
+vscode_install_extension dotdevru.prettier-java
 vscode_install_extension dotjoshjohnson.xml
 vscode_install_extension esbenp.prettier-vscode
 vscode_install_extension fbaligand.vscode-logstash-editor
@@ -74,6 +75,9 @@ tee ${HOME}/Library/Application\ Support/Code/User/settings.json <<-'EOF' >/dev/
   },
   "[ignore]": {
     "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "[java]": {
+    "editor.defaultFormatter": "dotdevru.prettier-java"
   },
   "[logstash]": {
     "editor.defaultFormatter": "fbaligand.vscode-logstash-editor"
