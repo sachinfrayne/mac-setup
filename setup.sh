@@ -9,12 +9,16 @@ brew_install() {
 }
 
 brew_install docker-compose
+brew_install gradle
 brew_install htop
 brew_install jq
 brew_install kubectl
 brew_install kubectx
 brew_install minikube
 brew_install node
+brew_install nvm
+brew_install stern
+brew_install yarn
 
 brew_install_cask() {
   if ! brew ls --versions --cask "$1" >/dev/null; then
@@ -27,6 +31,7 @@ brew_install_cask devtoys
 brew_install_cask docker
 brew_install_cask espanso
 brew_install_cask font-hack-nerd-font
+brew_install_cask intellij-idea-ce
 brew_install_cask iterm2
 brew_install_cask lens
 brew_install_cask lulu
