@@ -12,12 +12,14 @@ brew_install docker-compose
 brew_install gradle
 brew_install htop
 brew_install jq
+brew_install kcat
 brew_install kubectl
 brew_install kubectx
 brew_install minikube
 brew_install node
 brew_install nvm
 brew_install stern
+brew_install watch
 brew_install yarn
 
 brew_install_cask() {
@@ -38,6 +40,7 @@ brew_install_cask lulu
 brew_install_cask postman
 brew_install_cask raycast
 brew_install_cask visual-studio-code
+brew_install_cask webstorm
 brew_install_cask zed
 
 for F in ./bin/*.sh; do
