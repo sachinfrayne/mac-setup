@@ -30,6 +30,7 @@ vscode_install_extension ms-python.python
 vscode_install_extension ms-vscode-remote.remote-containers
 vscode_install_extension oderwat.indent-rainbow
 vscode_install_extension randomchance.logstash
+vscode_install_extension oracle.oracle-java
 vscode_install_extension ria.elastic
 vscode_install_extension statiolake.vscode-rustfmt
 vscode_install_extension stkb.rewrap
@@ -61,8 +62,14 @@ tee ${HOME}/Library/Application\ Support/Code/User/settings.json <<-'EOF' >/dev/
   "files.autoSave": "afterDelay",
   "git.autofetch": true,
   "git.confirmSync": false,
+  "github.copilot.chat.codeGeneration.instructions": [
+    {
+      "text": "Only provide the logic for the method I ask for, not the entire method or class."
+    }
+  ],
   "rewrap.wholeComment": true,
   "terminal.integrated.fontFamily": "Hack Nerd Font",
+  "typescript.tsserver.pluginPaths": ["@typescript-eslint"],
   "workbench.colorTheme": "Dark+",
   "editor.rulers": [
     {
@@ -77,7 +84,7 @@ tee ${HOME}/Library/Application\ Support/Code/User/settings.json <<-'EOF' >/dev/
     "editor.defaultFormatter": "foxundermoon.shell-format"
   },
   "[java]": {
-    "editor.defaultFormatter": "dotdevru.prettier-java"
+    "editor.defaultFormatter": "oracle.oracle-java"
   },
   "[logstash]": {
     "editor.defaultFormatter": "fbaligand.vscode-logstash-editor"
@@ -90,7 +97,8 @@ tee ${HOME}/Library/Application\ Support/Code/User/settings.json <<-'EOF' >/dev/
   },
   "[terraform]": {
     "editor.defaultFormatter": "hashicorp.terraform"
-  }
+  },
+  "diffEditor.ignoreTrimWhitespace": false
 }
 EOF
 
@@ -119,4 +127,5 @@ EOF
 
 tee ${HOME}/Library/Application\ Support/Code/User/spellright.dict <<-'EOF' >/dev/null
 Elasticsearch
+Kibana
 EOF
