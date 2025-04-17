@@ -11,6 +11,7 @@ brew_install() {
 brew_install docker-compose
 brew_install gradle
 brew_install htop
+brew_install imagemagick
 brew_install jq
 brew_install kcat
 brew_install kubectl
@@ -43,6 +44,6 @@ brew_install_cask visual-studio-code
 brew_install_cask webstorm
 brew_install_cask zed
 
-for F in ./bin/*.sh; do
+for F in ${HOME}/Source/mac-setup/bin/*.sh; do
   source $F
 done
