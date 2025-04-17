@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 mkdir -p ${HOME}/Library/Application\ Support/espanso/match/packages/
+mkdir -p ${HOME}/Library/Application\ Support/espanso/config/
 
 cp -f ${HOME}/Source/mac-setup/bin/espanso/*.yml ${HOME}/Library/Application\ Support/espanso/match/packages/
 
