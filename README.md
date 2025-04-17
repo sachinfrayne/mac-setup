@@ -8,10 +8,8 @@ setup mac with common software, aliases, tools and extensions
 ./setup.sh
 ```
 
-## manual commands
-
-### set timezone
+## next run
 
 ```bash
-sudo systemsetup -settimezone Europe/Madrid
+mac
 ```
