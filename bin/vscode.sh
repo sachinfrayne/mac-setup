@@ -30,7 +30,6 @@ vscode_install_extension ms-python.python
 vscode_install_extension ms-vscode-remote.remote-containers
 vscode_install_extension oderwat.indent-rainbow
 vscode_install_extension randomchance.logstash
-vscode_install_extension oracle.oracle-java
 vscode_install_extension ria.elastic
 vscode_install_extension statiolake.vscode-rustfmt
 vscode_install_extension stkb.rewrap
@@ -82,9 +81,6 @@ tee ${HOME}/Library/Application\ Support/Code/User/settings.json <<-'EOF' >/dev/
   },
   "[ignore]": {
     "editor.defaultFormatter": "foxundermoon.shell-format"
-  },
-  "[java]": {
-    "editor.defaultFormatter": "oracle.oracle-java"
   },
   "[logstash]": {
     "editor.defaultFormatter": "fbaligand.vscode-logstash-editor"
