@@ -9,7 +9,9 @@ brew_install() {
 }
 
 brew_install docker-compose
+brew_install google-cloud-sdk
 brew_install gradle
+brew_install helm
 brew_install htop
 brew_install imagemagick
 brew_install jq
@@ -19,7 +21,9 @@ brew_install kubectx
 brew_install minikube
 brew_install node
 brew_install nvm
+brew_install skopeo
 brew_install stern
+brew_install terraform
 brew_install watch
 brew_install yarn
 
