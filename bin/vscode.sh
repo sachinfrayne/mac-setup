@@ -28,6 +28,7 @@ vscode_install_extension mechatroner.rainbow-csv
 vscode_install_extension ms-azuretools.vscode-docker
 vscode_install_extension ms-python.python
 vscode_install_extension ms-vscode-remote.remote-containers
+vscode_install_extension ms-vscode.makefile-tools
 vscode_install_extension oderwat.indent-rainbow
 vscode_install_extension randomchance.logstash
 vscode_install_extension ria.elastic
@@ -69,6 +70,11 @@ tee ${HOME}/Library/Application\ Support/Code/User/settings.json <<-'EOF' >/dev/
   "rewrap.wholeComment": true,
   "terminal.integrated.fontFamily": "Hack Nerd Font",
   "typescript.tsserver.pluginPaths": ["@typescript-eslint"],
+  "workbench.colorCustomizations": {
+    "problemsErrorIcon.foreground": "#CCCCCC",
+    "problemsErrorForeground": "#CCCCCC",
+    "editorError.foreground": "#CCCCCC"
+  },
   "workbench.colorTheme": "Dark+",
   "editor.rulers": [
     {
