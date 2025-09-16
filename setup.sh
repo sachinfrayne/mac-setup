@@ -9,6 +9,7 @@ brew_install() {
 }
 
 brew_install docker-compose
+brew_install gh
 brew_install google-cloud-sdk
 brew_install gradle
 brew_install helm
