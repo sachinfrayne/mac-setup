@@ -24,6 +24,7 @@ vscode_install_extension github.copilot
 vscode_install_extension golang.go
 vscode_install_extension hashicorp.terraform
 vscode_install_extension humao.rest-client
+vscode_install_extension kevinrose.vsc-python-indent
 vscode_install_extension mechatroner.rainbow-csv
 vscode_install_extension ms-azuretools.vscode-docker
 vscode_install_extension ms-python.python
