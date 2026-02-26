@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-tee ${HOME}/.zshrc <<-'EOF' >/dev/null
+cat    > "${HOME}/.zshrc" <<-'EOF'
 ZSH_THEME=""
 
 HISTFILE=${HOME}/.zsh_history
@@ -13,6 +13,9 @@ setopt EXTENDED_HISTORY
 setopt HIST_REDUCE_BLANKS
 setopt INC_APPEND_HISTORY
 setopt SHARE_HISTORY
+
+# NODE
+export NODE_OPTIONS="--no-deprecation"
 
 # DOCKER
 export PATH="$PATH:/Applications/Docker.app/Contents/Resources/bin/"
