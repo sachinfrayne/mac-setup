@@ -20,6 +20,13 @@ export NODE_OPTIONS="--no-deprecation"
 # DOCKER
 export PATH="$PATH:/Applications/Docker.app/Contents/Resources/bin/"
 
+# JAVA (Homebrew OpenJDK 21; no sudo symlink into /Library/Java)
+export JAVA_HOME="$(brew --prefix)/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home"
+export PATH="$JAVA_HOME/bin:$PATH"
+
+# CURSOR CLI (no sudo symlink into /usr/local/bin)
+export PATH="/Applications/Cursor.app/Contents/Resources/app/bin:$PATH"
+
 # NVM
 export NVM_DIR="$HOME/.nvm"
 [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
@@ -31,6 +38,9 @@ source ${HOME}/.zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighti
 
 autoload -U +X compinit && compinit
 source <(kubectl completion zsh)
+
+# DIRENV (for per-directory environment variables)
+eval "$(direnv hook zsh)"
 POWERLEVEL9K_MODE=nerdfont-complete
 POWERLEVEL9K_CUSTOM_PROMPT_BACKGROUND="black"
 POWERLEVEL9K_CUSTOM_PROMPT_FOREGROUND="white"

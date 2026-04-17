@@ -1,7 +1,15 @@
 #!/usr/bin/env bash
 
+tee_out() {
+	if [[ "${MAC_SETUP_VERBOSE:-0}" == "1" ]]; then
+		tee "$@"
+	else
+		tee "$@" >/dev/null
+	fi
+}
+
 mkdir -p ${HOME}/.config/zed
-tee ${HOME}/.config/zed/settings.json <<-'EOF' >/dev/null
+tee_out ${HOME}/.config/zed/settings.json <<-'EOF'
 {
   "ui_font_size": 16,
   "buffer_font_size": 16,

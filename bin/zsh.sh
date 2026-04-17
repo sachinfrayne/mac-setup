@@ -4,7 +4,11 @@ function git_clone() {
   if [[ ! -d $2 ]]; then
     git clone $1 $2
   else
-    (cd $2 && git pull >/dev/null 2>&1)
+    if [[ "${MAC_SETUP_VERBOSE:-0}" == "1" ]]; then
+      (cd $2 && git pull)
+    else
+      (cd $2 && git pull >/dev/null 2>&1)
+    fi
   fi
 }
 
