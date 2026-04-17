@@ -2,21 +2,57 @@
 
 set -euo pipefail
 
+# Source common utilities library
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=lib/common.sh
+source "${SCRIPT_DIR}/lib/common.sh"
+
 MAC_SETUP_VERBOSE=0
-if [[ "${1:-}" == "--verbose" || "${1:-}" == "-v" ]]; then
-	MAC_SETUP_VERBOSE=1
-	shift
-fi
+DRY_RUN=0
+
+# Parse flags (can be combined)
+while [[ $# -gt 0 ]]; do
+	case "$1" in
+		--verbose|-v)
+			MAC_SETUP_VERBOSE=1
+			shift
+			;;
+		--dry-run)
+			DRY_RUN=1
+			shift
+			;;
+		--upgrade|--help|-h|--verify|--lint)
+			# Don't shift these, handle them below
+			break
+			;;
+		*)
+			break
+			;;
+	esac
+done
+
 export MAC_SETUP_VERBOSE
+export DRY_RUN
 
 usage() {
 	cat <<'EOF'
-Usage: mac [--verbose|-v] [--upgrade] [--help|-h]
+Usage: mac [--verbose|-v] [--dry-run] [--upgrade] [--verify] [--lint] [--help|-h]
 
 Options:
   --verbose, -v   Print extra progress details (and unsuppress some output).
+  --dry-run       Show what would be installed without making changes.
   --upgrade       Run Homebrew update/upgrade/cleanup and exit.
+  --verify        Verify all installations and configurations.
+  --lint          Run shellcheck on all shell scripts and exit.
   --help, -h      Show this help and exit.
+
+Examples:
+  mac                    # Run setup (idempotent)
+  mac --verbose          # Run with detailed output
+  mac --dry-run          # Preview what would be installed
+  mac --upgrade          # Upgrade all Homebrew packages
+  mac --verify           # Check installation status
+  mac --lint             # Lint all shell scripts
 EOF
 }
 
@@ -25,13 +61,21 @@ if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
 	exit 0
 fi
 
-log() {
-	if [[ "${MAC_SETUP_VERBOSE}" == "1" ]]; then
-		echo "$@" >&2
-	fi
-}
+# log() function now provided by lib/common.sh
+
+if [[ "${DRY_RUN}" == "1" ]]; then
+	echo "DRY RUN MODE - No changes will be made"
+	echo "============================================"
+fi
 
 log "mac-setup: verbose (Homebrew + bin/*.sh)"
+
+# Verify Homebrew is installed (skip in dry-run mode)
+if [[ "${DRY_RUN}" != "1" ]]; then
+	if ! require_command brew "Homebrew is required. Install from https://brew.sh"; then
+		exit 1
+	fi
+fi
 
 if [[ "${MAC_SETUP_VERBOSE}" != "1" ]]; then
 	# Keep Node-based tools quiet (Cursor CLI, etc.) unless explicitly verbose.
@@ -56,18 +100,25 @@ if [[ "${1:-}" == "--upgrade" ]]; then
 	exit 0
 fi
 
-brew_install() {
-	if [[ "${MAC_SETUP_VERBOSE}" == "1" ]]; then
-		if ! brew list --formula "$1"; then
-			log "brew install formula: $1"
-			brew install "$1"
-		fi
+if [[ "${1:-}" == "--verify" ]]; then
+	if [[ -x "${MAC_SETUP_ROOT}/scripts/verify.sh" ]]; then
+		exec "${MAC_SETUP_ROOT}/scripts/verify.sh"
 	else
-		if ! brew list --formula "$1" >/dev/null 2>&1; then
-			brew install "$1"
-		fi
+		echo "ERROR: Verification script not found at ${MAC_SETUP_ROOT}/scripts/verify.sh"
+		exit 1
 	fi
-}
+fi
+
+if [[ "${1:-}" == "--lint" ]]; then
+	if [[ -x "${MAC_SETUP_ROOT}/scripts/lint.sh" ]]; then
+		exec "${MAC_SETUP_ROOT}/scripts/lint.sh"
+	else
+		echo "ERROR: Lint script not found at ${MAC_SETUP_ROOT}/scripts/lint.sh"
+		exit 1
+	fi
+fi
+
+# brew_install() function now provided by lib/common.sh
 
 brew_install crane
 brew_install direnv
@@ -87,6 +138,7 @@ brew_install node
 brew_install nvm
 brew_install ollama
 brew_install openjdk@21
+brew_install shellcheck
 brew_install shfmt
 brew_install skopeo
 brew_install stern
@@ -96,18 +148,7 @@ brew_install watch
 brew_install yarn
 brew_install yq
 
-brew_install_cask() {
-	if [[ "${MAC_SETUP_VERBOSE}" == "1" ]]; then
-		if ! brew list --cask "$1"; then
-			log "brew install --cask: $1"
-			brew install --cask "$1"
-		fi
-	else
-		if ! brew list --cask "$1" >/dev/null 2>&1; then
-			brew install --cask "$1"
-		fi
-	fi
-}
+# brew_install_cask() function now provided by lib/common.sh
 
 brew_install_cask alt-tab
 brew_install_cask claude-code
@@ -128,9 +169,16 @@ brew_install_cask raycast
 brew_install_cask webstorm
 brew_install_cask zed
 
-for F in ${HOME}/Source/mac-setup/bin/*.sh; do
-	log "source $(basename "$F")"
-	source "$F"
-done
-
-echo "Install complete."
+if [[ "${DRY_RUN}" != "1" ]]; then
+	for F in "${MAC_SETUP_ROOT}"/bin/*.sh; do
+		log "source $(basename "$F")"
+		# shellcheck source=/dev/null
+		source "$F"
+	done
+	echo "Install complete."
+else
+	echo ""
+	echo "============================================"
+	echo "DRY RUN COMPLETE - No changes were made"
+	echo "Run without --dry-run to actually install"
+fi

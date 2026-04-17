@@ -1,13 +1,28 @@
 #!/usr/bin/env bash
 
-cat    > "${HOME}/.zshrc" <<-'EOF'
+set -euo pipefail
+
+# Source common utilities
+if [[ -z "${MAC_SETUP_ROOT:-}" ]]; then
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    # shellcheck source=../lib/common.sh
+    source "${SCRIPT_DIR}/../lib/common.sh"
+fi
+
+# Detect dynamic paths
+DETECTED_BREW_PREFIX="${BREW_PREFIX}"
+DETECTED_PYTHON_PATH="$(get_python3_path)"
+
+# Generate .zshrc with dynamic paths
+# Note: Using non-quoted EOF to allow variable expansion
+cat > "${HOME}/.zshrc" <<EOF
 ZSH_THEME=""
 
-HISTFILE=${HOME}/.zsh_history
+HISTFILE=\${HOME}/.zsh_history
 HISTSIZE=9999999
 SAVEHIST=9999999
 
-eval "$(/opt/homebrew/bin/brew shellenv)"
+eval "\$(${DETECTED_BREW_PREFIX}/bin/brew shellenv)"
 
 setopt EXTENDED_HISTORY
 setopt HIST_REDUCE_BLANKS
@@ -18,29 +33,29 @@ setopt SHARE_HISTORY
 export NODE_OPTIONS="--no-deprecation"
 
 # DOCKER
-export PATH="$PATH:/Applications/Docker.app/Contents/Resources/bin/"
+export PATH="\$PATH:/Applications/Docker.app/Contents/Resources/bin/"
 
 # JAVA (Homebrew OpenJDK 21; no sudo symlink into /Library/Java)
-export JAVA_HOME="$(brew --prefix)/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home"
-export PATH="$JAVA_HOME/bin:$PATH"
+export JAVA_HOME="${DETECTED_BREW_PREFIX}/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home"
+export PATH="\$JAVA_HOME/bin:\$PATH"
 
 # CURSOR CLI (no sudo symlink into /usr/local/bin)
-export PATH="/Applications/Cursor.app/Contents/Resources/app/bin:$PATH"
+export PATH="/Applications/Cursor.app/Contents/Resources/app/bin:\$PATH"
 
 # NVM
-export NVM_DIR="$HOME/.nvm"
-[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
-[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
+export NVM_DIR="\$HOME/.nvm"
+[ -s "${DETECTED_BREW_PREFIX}/opt/nvm/nvm.sh" ] && \\. "${DETECTED_BREW_PREFIX}/opt/nvm/nvm.sh"
+[ -s "${DETECTED_BREW_PREFIX}/opt/nvm/etc/bash_completion.d/nvm" ] && \\. "${DETECTED_BREW_PREFIX}/opt/nvm/etc/bash_completion.d/nvm"
 
-source ${HOME}/.zsh/custom/plugins/powerlevel10k/powerlevel10k.zsh-theme
-source ${HOME}/.zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-source ${HOME}/.zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source \${HOME}/.zsh/custom/plugins/powerlevel10k/powerlevel10k.zsh-theme
+source \${HOME}/.zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+source \${HOME}/.zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 autoload -U +X compinit && compinit
 source <(kubectl completion zsh)
 
 # DIRENV (for per-directory environment variables)
-eval "$(direnv hook zsh)"
+eval "\$(direnv hook zsh)"
 POWERLEVEL9K_MODE=nerdfont-complete
 POWERLEVEL9K_CUSTOM_PROMPT_BACKGROUND="black"
 POWERLEVEL9K_CUSTOM_PROMPT_FOREGROUND="white"
@@ -65,7 +80,7 @@ alias brew_upgrade='brew outdated | xargs brew reinstall'
 alias c='clear'
 alias clear='printf "\033c"'
 alias cp='cp -iv'
-alias docker_clean='docker container rm $(docker container ls -a -q) || true; docker network prune -f; docker volume prune -f'
+alias docker_clean='docker container rm \$(docker container ls -a -q) || true; docker network prune -f; docker volume prune -f'
 alias docker_start='open -a Docker'
 alias docker_stop='pkill -SIGHUP -f /Applications/Docker.app "docker serve"'
 alias finder='open .'
@@ -75,15 +90,15 @@ alias hgrep='history -in 0 | grep'
 alias k=kubectl
 alias ll='ls -lah'
 alias ls='ls -G'
-alias mac='~/Source/mac-setup/setup.sh'
+alias mac='${MAC_SETUP_ROOT}/setup.sh'
 alias mkdir='mkdir -pv'
 alias mv='mv -iv'
-alias python='/opt/homebrew/bin/python3.12'
+alias python='${DETECTED_PYTHON_PATH}'
 alias reset_coreaudio='sudo killall coreaudiod'
 alias tailf='tail -f'
 
 function cheat () {
-  curl "https://cheat.sh/$1?style=default"
+  curl "https://cheat.sh/\$1?style=default"
 }
 
 source ~/.zsh/.zlocal

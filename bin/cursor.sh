@@ -4,6 +4,15 @@
 # settings, and keybindings. Safe to source from zshrc (uses return on failure).
 #
 
+set -euo pipefail
+
+# Source common utilities
+if [[ -z "${MAC_SETUP_ROOT:-}" ]]; then
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    # shellcheck source=../lib/common.sh
+    source "${SCRIPT_DIR}/../lib/common.sh"
+fi
+
 # Respect mac-setup --verbose: show Node deprecation output from Cursor CLI.
 if [[ "${MAC_SETUP_VERBOSE:-0}" != "1" ]]; then
 	if [[ -n "${NODE_OPTIONS:-}" ]]; then
@@ -17,24 +26,27 @@ export PATH="/Applications/Cursor.app/Contents/Resources/app/bin:$PATH"
 
 if ! command -v cursor &>/dev/null; then
 	echo "Cursor CLI not found. Install the Cursor app (brew install --cask cursor)."
-	return 1
+	# shellcheck disable=SC2317
+	return 1 2>/dev/null || exit 1
 fi
 
-EXTENSIONS=($(
+mapfile -t EXTENSIONS < <(
 	if [[ "${MAC_SETUP_VERBOSE:-0}" == "1" ]]; then
 		cursor --list-extensions
 	else
 		NODE_OPTIONS="--no-deprecation" cursor --list-extensions
 	fi | tr '[:upper:]' '[:lower:]'
-))
+)
 
 cursor_install_extension() {
-	if [[ ${#EXTENSIONS[@]} -eq 0 || ! " ${EXTENSIONS[@]} " =~ " $1 " ]]; then
-		if [[ "${MAC_SETUP_VERBOSE:-0}" == "1" ]]; then
-			cursor --install-extension "$1" || true
-		else
-			NODE_OPTIONS="--no-deprecation" cursor --install-extension "$1" || true
-		fi
+	local ext="$1" installed
+	for installed in "${EXTENSIONS[@]}"; do
+		[[ "$installed" == "$ext" ]] && return 0
+	done
+	if [[ "${MAC_SETUP_VERBOSE:-0}" == "1" ]]; then
+		cursor --install-extension "$ext" || true
+	else
+		NODE_OPTIONS="--no-deprecation" cursor --install-extension "$ext" || true
 	fi
 }
 
@@ -93,20 +105,15 @@ fi
 CURSOR_SEED_WORDS="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)/cursor/cspell-seed-words.txt"
 if [[ ! -f "$CURSOR_SEED_WORDS" ]]; then
 	echo "cursor.sh: seed words file not found: $CURSOR_SEED_WORDS" >&2
-	return 1
+	# shellcheck disable=SC2317
+	return 1 2>/dev/null || exit 1
 fi
 while IFS= read -r line || [[ -n "$line" ]]; do
 	[[ -z "$line" || "$line" =~ ^# ]] && continue
 	grep -qxF -- "$line" "$WORDLIST" 2>/dev/null || printf '%s\n' "$line" >>"$WORDLIST"
 done <"$CURSOR_SEED_WORDS"
 
-tee_out() {
-	if [[ "${MAC_SETUP_VERBOSE:-0}" == "1" ]]; then
-		tee "$@"
-	else
-		tee "$@" >/dev/null
-	fi
-}
+# tee_out() function provided by lib/common.sh
 
 tee_out "${CURSOR_USER}/snippets/bash-file-header.code-snippets" <<'EOF'
 {
@@ -117,6 +124,7 @@ tee_out "${CURSOR_USER}/snippets/bash-file-header.code-snippets" <<'EOF'
 }
 EOF
 
+# Note: /opt/homebrew/bin/python3 is a Homebrew-managed symlink to the latest Python 3 version
 tee_out "${CURSOR_USER}/settings.json" <<'EOF'
 {
   "diffEditor.ignoreTrimWhitespace": false,
