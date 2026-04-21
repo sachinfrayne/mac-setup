@@ -6,14 +6,11 @@
 
 set -euo pipefail
 
-# Source common utilities
 if [[ -z "${MAC_SETUP_ROOT:-}" ]]; then
-    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-    # shellcheck source=../lib/common.sh
-    source "${SCRIPT_DIR}/../lib/common.sh"
+	SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+	source "${SCRIPT_DIR}/../lib/common.sh"
 fi
 
-# Respect mac-setup --verbose: show Node deprecation output from Cursor CLI.
 if [[ "${MAC_SETUP_VERBOSE:-0}" != "1" ]]; then
 	if [[ -n "${NODE_OPTIONS:-}" ]]; then
 		export NODE_OPTIONS="${NODE_OPTIONS} --no-deprecation"
@@ -26,7 +23,6 @@ export PATH="/Applications/Cursor.app/Contents/Resources/app/bin:$PATH"
 
 if ! command -v cursor &>/dev/null; then
 	echo "Cursor CLI not found. Install the Cursor app (brew install --cask cursor)."
-	# shellcheck disable=SC2317
 	return 1 2>/dev/null || exit 1
 fi
 
@@ -65,8 +61,6 @@ done
 CURSOR_USER="${HOME}/Library/Application Support/Cursor/User"
 mkdir -p "${CURSOR_USER}/snippets"
 
-# Agent skills: canonical tree is <workspace>/.cursor/skills (next to this repo's parent).
-# ~/.cursor/skills is a symlink so Cursor discovers the same files globally.
 MAC_SETUP_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")/.." && pwd)"
 WORKSPACE_ROOT="$(cd "${MAC_SETUP_ROOT}/.." && pwd)"
 CURSOR_SKILLS_SRC="${WORKSPACE_ROOT}/.cursor/skills"
@@ -79,7 +73,6 @@ if [[ -L "${CURSOR_SKILLS_HOME}" ]]; then
 		ln -s "${CURSOR_SKILLS_SRC}" "${CURSOR_SKILLS_HOME}"
 	fi
 elif [[ -d "${CURSOR_SKILLS_HOME}" ]]; then
-	# Migrate a real directory once: merge into workspace, then replace with symlink.
 	shopt -s dotglob nullglob
 	for item in "${CURSOR_SKILLS_HOME}"/*; do
 		base="$(basename "${item}")"
@@ -101,7 +94,6 @@ if [[ ! -s "$WORDLIST" ]]; then
 	printf '# One word per line; add entries here as needed.\n' >>"$WORDLIST"
 fi
 
-# Idempotent seed words: append any missing lines (never removes user entries).
 CURSOR_SEED_WORDS="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)/cursor/cspell-seed-words.txt"
 if [[ ! -f "$CURSOR_SEED_WORDS" ]]; then
 	echo "cursor.sh: seed words file not found: $CURSOR_SEED_WORDS" >&2
@@ -113,8 +105,6 @@ while IFS= read -r line || [[ -n "$line" ]]; do
 	grep -qxF -- "$line" "$WORDLIST" 2>/dev/null || printf '%s\n' "$line" >>"$WORDLIST"
 done <"$CURSOR_SEED_WORDS"
 
-# tee_out() function provided by lib/common.sh
-
 tee_out "${CURSOR_USER}/snippets/bash-file-header.code-snippets" <<'EOF'
 {
   "Bash File Header": {
@@ -124,7 +114,6 @@ tee_out "${CURSOR_USER}/snippets/bash-file-header.code-snippets" <<'EOF'
 }
 EOF
 
-# Note: /opt/homebrew/bin/python3 is a Homebrew-managed symlink to the latest Python 3 version
 tee_out "${CURSOR_USER}/settings.json" <<'EOF'
 {
   "diffEditor.ignoreTrimWhitespace": false,
@@ -151,7 +140,8 @@ tee_out "${CURSOR_USER}/settings.json" <<'EOF'
     "editor.insertSpaces": false,
     "editor.detectIndentation": false,
     "editor.tabSize": 4
-  }
+  },
+  "[markdown]": {"editor.defaultFormatter": "esbenp.prettier-vscode"}
 }
 EOF
 
