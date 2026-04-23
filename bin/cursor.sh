@@ -48,6 +48,7 @@ cursor_install_extension() {
 
 CURSOR_EXTENSIONS=(
 	hashicorp.terraform
+	lucien-martijn.parquet-visualizer
 	ms-python.python
 	ms-vscode.makefile-tools
 	redhat.java
