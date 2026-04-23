@@ -10,6 +10,7 @@ iterm2
 jingra
 logi
 nodepool
+opensearch
 oversample
 qdrant
 tfstate
