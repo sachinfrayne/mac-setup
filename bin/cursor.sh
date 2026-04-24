@@ -124,6 +124,7 @@ tee_out "${CURSOR_USER}/settings.json" <<'EOF'
   "files.autoSave": "afterDelay",
   "terminal.integrated.fontFamily": "Hack Nerd Font",
   "workbench.colorTheme": "Default Dark+",
+  "workbench.editorAssociations": {"*.csv": "default"},
   "cSpell.dictionaryDefinitions": [
     {
       "name": "cursor-user-words",
