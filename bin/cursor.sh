@@ -119,6 +119,7 @@ tee_out "${CURSOR_USER}/settings.json" <<'EOF'
 {
   "diffEditor.ignoreTrimWhitespace": false,
   "editor.formatOnSave": true,
+  "editor.wordWrap": "on",
   "editor.rulers": [{ "column": 80, "color": "#5a5a5a80" }],
   "editor.tabSize": 2,
   "files.autoSave": "afterDelay",
