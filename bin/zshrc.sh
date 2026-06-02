@@ -4,9 +4,9 @@ set -euo pipefail
 
 # Source common utilities
 if [[ -z "${MAC_SETUP_ROOT:-}" ]]; then
-    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-    # shellcheck source=../lib/common.sh
-    source "${SCRIPT_DIR}/../lib/common.sh"
+	SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+	# shellcheck source=../lib/common.sh
+	source "${SCRIPT_DIR}/../lib/common.sh"
 fi
 
 # Detect dynamic paths
@@ -15,7 +15,7 @@ DETECTED_PYTHON_PATH="$(get_python3_path)"
 
 # Generate .zshrc with dynamic paths
 # Note: Using non-quoted EOF to allow variable expansion
-cat > "${HOME}/.zshrc" <<EOF
+cat >"${HOME}/.zshrc" <<EOF
 ZSH_THEME=""
 
 HISTFILE=\${HOME}/.zsh_history

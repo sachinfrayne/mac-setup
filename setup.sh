@@ -13,21 +13,21 @@ DRY_RUN=0
 # Parse flags (can be combined)
 while [[ $# -gt 0 ]]; do
 	case "$1" in
-		--verbose|-v)
-			MAC_SETUP_VERBOSE=1
-			shift
-			;;
-		--dry-run)
-			DRY_RUN=1
-			shift
-			;;
-		--upgrade|--help|-h|--verify|--lint)
-			# Don't shift these, handle them below
-			break
-			;;
-		*)
-			break
-			;;
+	--verbose | -v)
+		MAC_SETUP_VERBOSE=1
+		shift
+		;;
+	--dry-run)
+		DRY_RUN=1
+		shift
+		;;
+	--upgrade | --help | -h | --verify | --lint)
+		# Don't shift these, handle them below
+		break
+		;;
+	*)
+		break
+		;;
 	esac
 done
 
@@ -129,6 +129,7 @@ brew_install gradle
 brew_install helm
 brew_install htop
 brew_install imagemagick
+brew_install jbang
 brew_install jq
 brew_install kcat
 brew_install kubectl
