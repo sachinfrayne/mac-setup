@@ -5,6 +5,7 @@ devtoys
 envsubst
 esbenp
 espanso
+forcemerge
 hnsw
 iterm2
 jingra
@@ -21,3 +22,5 @@ webstorm
 wordlist
 xpack
 yzhang
+behaviour
+synchronisation
