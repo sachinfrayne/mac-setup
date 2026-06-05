@@ -1,4 +1,5 @@
 assertj
+behaviour
 coverable
 coveredratio
 devtoys
@@ -8,12 +9,15 @@ espanso
 forcemerge
 hnsw
 iterm2
+jacoco
 jingra
 logi
 nodepool
 opensearch
 oversample
 qdrant
+synchronisation
+temurin
 tfstate
 tfvars
 timenow
@@ -22,5 +26,3 @@ webstorm
 wordlist
 xpack
 yzhang
-behaviour
-synchronisation
