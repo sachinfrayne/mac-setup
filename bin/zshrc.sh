@@ -4,14 +4,63 @@ set -euo pipefail
 
 # Source common utilities
 if [[ -z "${MAC_SETUP_ROOT:-}" ]]; then
-	SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-	# shellcheck source=../lib/common.sh
-	source "${SCRIPT_DIR}/../lib/common.sh"
+	MAC_SETUP_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 fi
+# shellcheck source=../lib/common.sh
+source "${MAC_SETUP_ROOT}/lib/common.sh"
 
-# Detect dynamic paths
+ZSHRC_BIN_DIR="${MAC_SETUP_ROOT}/bin"
+ALIASES_AND_FUNCTIONS_FILE="${ZSHRC_BIN_DIR}/zshrc/aliases_and_functions.sh"
 DETECTED_BREW_PREFIX="${BREW_PREFIX}"
 DETECTED_PYTHON_PATH="$(get_python3_path)"
+
+ensure_command_descriptions() {
+	local file="$1"
+	local -a missing=()
+	local name line desc_marker="# descriptions"
+
+	[[ -f "$file" ]] || return 0
+
+	while IFS= read -r line; do
+		[[ "$line" =~ ^alias[[:space:]]+([^=]+)= ]] || continue
+		name="${BASH_REMATCH[1]}"
+		[[ "$name" == *:desc ]] && continue
+		if ! grep -qF "alias ${name}:desc=" "$file"; then
+			missing+=("$name")
+		fi
+	done <"$file"
+
+	(( ${#missing[@]} == 0 )) && return 0
+
+	if grep -q "^${desc_marker}$" "$file"; then
+		{
+			while IFS= read -r line; do
+				printf '%s\n' "$line"
+				if [[ "$line" == "${desc_marker}" ]]; then
+					for name in "${missing[@]}"; do
+						printf "alias %s:desc='(no description)'\n" "$name"
+					done
+				fi
+			done <"$file"
+		} >"${file}.tmp"
+	else
+		{
+			cat "$file"
+			printf '\n%s\n' "$desc_marker"
+			for name in "${missing[@]}"; do
+				printf "alias %s:desc='(no description)'\n" "$name"
+			done
+		} >"${file}.tmp"
+	fi
+	mv "${file}.tmp" "$file"
+
+	log "Added :desc aliases for: ${missing[*]}"
+}
+
+ensure_command_descriptions "${ALIASES_AND_FUNCTIONS_FILE}"
+
+mkdir -p "${HOME}/.zsh/custom"
+cp "${ALIASES_AND_FUNCTIONS_FILE}" "${HOME}/.zsh/custom/commands.zsh"
 
 # Generate .zshrc with dynamic paths
 # Note: Using non-quoted EOF to allow variable expansion
@@ -76,29 +125,30 @@ ZSH_HIGHLIGHT_STYLES[reserved-word]=fg=red,bold
 
 unalias -a
 
-alias brew_upgrade='brew outdated | xargs brew reinstall'
-alias c='clear'
-alias clear='printf "\033c"'
-alias cp='cp -iv'
-alias docker_clean='docker container rm \$(docker container ls -a -q) || true; docker network prune -f; docker volume prune -f'
-alias docker_start='open -a Docker'
-alias docker_stop='pkill -SIGHUP -f /Applications/Docker.app "docker serve"'
-alias finder='open .'
-alias grep='grep --color=auto'
-alias history='history -in'
-alias hgrep='history -in 0 | grep'
-alias k=kubectl
-alias ll='ls -lah'
-alias ls='ls -G'
-alias mac='${MAC_SETUP_ROOT}/setup.sh'
-alias mkdir='mkdir -pv'
-alias mv='mv -iv'
-alias python='${DETECTED_PYTHON_PATH}'
-alias reset_coreaudio='sudo killall coreaudiod'
-alias tailf='tail -f'
+export MAC_SETUP_ROOT="${MAC_SETUP_ROOT}"
+DETECTED_PYTHON_PATH="${DETECTED_PYTHON_PATH}"
+[[ -f \${HOME}/.zsh/custom/commands.zsh ]] && source \${HOME}/.zsh/custom/commands.zsh
 
-function cheat () {
-  curl "https://cheat.sh/\$1?style=default"
+shell-help() {
+  echo "# aliases"
+  local name desc_key
+  for name in \${(ko)aliases}; do
+    [[ \$name == *:desc ]] && continue
+    desc_key="\${name}:desc"
+    if (( \$+aliases[\$desc_key] )); then
+      printf '  %-28s %s\n' "\$name" "\${aliases[\$desc_key]}"
+    else
+      printf '  %-28s %s\n' "\$name" "(no description)"
+    fi
+  done
+}
+
+alias() {
+  if (( \$# == 0 )); then
+    shell-help
+  else
+    builtin alias "\$@"
+  fi
 }
 
 [[ -f \${HOME}/.zsh/.zlocal ]] && source \${HOME}/.zsh/.zlocal
