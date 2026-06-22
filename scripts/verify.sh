@@ -255,17 +255,28 @@ echo ""
 # Check Aliases
 echo "Checking Aliases..."
 
-if [[ -f "${HOME}/.zshrc" ]]; then
-    if grep -q "alias mac=" "${HOME}/.zshrc"; then
-        check_pass ".zshrc defines 'mac' alias"
+COMMANDS_FILE="${HOME}/.zsh/custom/commands.zsh"
+if [[ -f "${COMMANDS_FILE}" ]]; then
+    if grep -q "alias mac=" "${COMMANDS_FILE}"; then
+        check_pass "commands.zsh defines 'mac' alias"
     else
-        check_fail ".zshrc doesn't define 'mac' alias"
+        check_fail "commands.zsh doesn't define 'mac' alias"
     fi
 
-    if grep -q "alias k=" "${HOME}/.zshrc"; then
-        check_pass ".zshrc defines 'k' (kubectl) alias"
+    if grep -q "alias k=" "${COMMANDS_FILE}"; then
+        check_pass "commands.zsh defines 'k' (kubectl) alias"
     else
-        check_warn ".zshrc doesn't define 'k' alias"
+        check_warn "commands.zsh doesn't define 'k' alias"
+    fi
+elif [[ -f "${HOME}/.zshrc" ]]; then
+    check_warn "commands.zsh is missing (run mac to install)"
+fi
+
+if [[ -f "${HOME}/.zshrc" ]]; then
+    if grep -q "commands.zsh" "${HOME}/.zshrc"; then
+        check_pass ".zshrc sources commands.zsh"
+    else
+        check_warn ".zshrc doesn't source commands.zsh"
     fi
 fi
 
