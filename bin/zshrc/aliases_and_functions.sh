@@ -1,8 +1,20 @@
-# Custom zsh commands.
+# Custom zsh commands: public aliases and private helpers.
 # Each public alias has a companion "<name>:desc" alias for shell-help.
+
+# Paths for __mac and __python (placeholders expanded by bin/zshrc.sh at install)
+export MAC_SETUP_ROOT="__MAC_SETUP_ROOT__"
+export DETECTED_PYTHON_PATH="__DETECTED_PYTHON_PATH__"
 
 __cheat() {
 	curl "https://cheat.sh/$1?style=default"
+}
+
+__mac() {
+	"${MAC_SETUP_ROOT}/setup.sh" "$@"
+}
+
+__python() {
+	"${DETECTED_PYTHON_PATH}" "$@"
 }
 
 __git_reset_to_upstream() {
@@ -21,6 +33,27 @@ __git_reset_to_upstream() {
 	git reset --hard "upstream/$branch"
 }
 
+__git_merge_from_upstream() {
+	local branch reply upstream_ref
+	branch=$(git rev-parse --abbrev-ref HEAD) || return 1
+	upstream_ref="upstream/$branch"
+	git fetch upstream || return 1
+	if ! git rev-parse --verify "$upstream_ref" >/dev/null 2>&1; then
+		echo "error: $upstream_ref does not exist" >&2
+		return 1
+	fi
+	printf 'Merge %s into %s? [y/N] ' "$upstream_ref" "$branch"
+	read -r reply
+	case "$reply" in
+	[yY] | [yY][eE][sS]) ;;
+	*)
+		echo "Aborted."
+		return 1
+		;;
+	esac
+	git merge "$upstream_ref"
+}
+
 # descriptions
 alias brew_upgrade:desc='Reinstall outdated Homebrew formulae'
 alias cheat:desc='Show a cheat sheet from cheat.sh for a command'
@@ -31,6 +64,7 @@ alias docker_start:desc='Open Docker Desktop'
 alias docker_stop:desc='Stop the Docker Desktop daemon'
 alias finder:desc='Open the current directory in Finder'
 alias git-reset-to-upstream:desc='Fetch upstream and hard-reset the current branch after confirmation'
+alias git-merge-from-upstream:desc='Fetch upstream and merge upstream into the current branch after confirmation'
 alias grep:desc='Grep with color highlighting'
 alias hgrep:desc='Search shell history for a pattern'
 alias history:desc='Show numbered shell history'
@@ -54,15 +88,16 @@ alias docker_start='open -a Docker'
 alias docker_stop='pkill -SIGHUP -f /Applications/Docker.app "docker serve"'
 alias finder='open .'
 alias git-reset-to-upstream='__git_reset_to_upstream'
+alias git-merge-from-upstream='__git_merge_from_upstream'
 alias grep='grep --color=auto'
 alias hgrep='builtin history -in 0 | grep'
 alias history='builtin history -in'
 alias k='kubectl'
 alias ll='ls -lah'
 alias ls='ls -G'
-alias mac='${MAC_SETUP_ROOT}/setup.sh'
+alias mac='__mac'
 alias mkdir='mkdir -pv'
 alias mv='mv -iv'
-alias python='${DETECTED_PYTHON_PATH}'
+alias python='__python'
 alias reset_coreaudio='sudo killall coreaudiod'
 alias tailf='tail -f'

@@ -2,65 +2,24 @@
 
 set -euo pipefail
 
-# Source common utilities
 if [[ -z "${MAC_SETUP_ROOT:-}" ]]; then
 	MAC_SETUP_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 fi
 # shellcheck source=../lib/common.sh
 source "${MAC_SETUP_ROOT}/lib/common.sh"
 
-ZSHRC_BIN_DIR="${MAC_SETUP_ROOT}/bin"
-ALIASES_AND_FUNCTIONS_FILE="${ZSHRC_BIN_DIR}/zshrc/aliases_and_functions.sh"
-DETECTED_BREW_PREFIX="${BREW_PREFIX}"
-DETECTED_PYTHON_PATH="$(get_python3_path)"
+ZSHRC_DIR="${MAC_SETUP_ROOT}/bin/zshrc"
+ALIASES_AND_FUNCTIONS_FILE="${ZSHRC_DIR}/aliases_and_functions.sh"
 
-ensure_command_descriptions() {
-	local file="$1"
-	local -a missing=()
-	local name line desc_marker="# descriptions"
-
-	[[ -f "$file" ]] || return 0
-
-	while IFS= read -r line; do
-		[[ "$line" =~ ^alias[[:space:]]+([^=]+)= ]] || continue
-		name="${BASH_REMATCH[1]}"
-		[[ "$name" == *:desc ]] && continue
-		if ! grep -qF "alias ${name}:desc=" "$file"; then
-			missing+=("$name")
-		fi
-	done <"$file"
-
-	(( ${#missing[@]} == 0 )) && return 0
-
-	if grep -q "^${desc_marker}$" "$file"; then
-		{
-			while IFS= read -r line; do
-				printf '%s\n' "$line"
-				if [[ "$line" == "${desc_marker}" ]]; then
-					for name in "${missing[@]}"; do
-						printf "alias %s:desc='(no description)'\n" "$name"
-					done
-				fi
-			done <"$file"
-		} >"${file}.tmp"
-	else
-		{
-			cat "$file"
-			printf '\n%s\n' "$desc_marker"
-			for name in "${missing[@]}"; do
-				printf "alias %s:desc='(no description)'\n" "$name"
-			done
-		} >"${file}.tmp"
-	fi
-	mv "${file}.tmp" "$file"
-
-	log "Added :desc aliases for: ${missing[*]}"
-}
-
+# shellcheck source=zshrc/ensure_command_descriptions.sh
+source "${ZSHRC_DIR}/ensure_command_descriptions.sh"
 ensure_command_descriptions "${ALIASES_AND_FUNCTIONS_FILE}"
 
 mkdir -p "${HOME}/.zsh/custom"
-cp "${ALIASES_AND_FUNCTIONS_FILE}" "${HOME}/.zsh/custom/commands.zsh"
+sed \
+	-e "s|__MAC_SETUP_ROOT__|${MAC_SETUP_ROOT}|g" \
+	-e "s|__DETECTED_PYTHON_PATH__|$(get_python3_path)|g" \
+	"${ALIASES_AND_FUNCTIONS_FILE}" >"${HOME}/.zsh/custom/commands.zsh"
 
 # Generate .zshrc with dynamic paths
 # Note: Using non-quoted EOF to allow variable expansion
@@ -71,7 +30,7 @@ HISTFILE=\${HOME}/.zsh_history
 HISTSIZE=9999999
 SAVEHIST=9999999
 
-eval "\$(${DETECTED_BREW_PREFIX}/bin/brew shellenv)"
+eval "\$(${BREW_PREFIX}/bin/brew shellenv)"
 
 setopt EXTENDED_HISTORY
 setopt HIST_REDUCE_BLANKS
@@ -85,7 +44,7 @@ export NODE_OPTIONS="--no-deprecation"
 export PATH="\$PATH:/Applications/Docker.app/Contents/Resources/bin/"
 
 # JAVA (Homebrew OpenJDK 21; no sudo symlink into /Library/Java)
-export JAVA_HOME="${DETECTED_BREW_PREFIX}/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home"
+export JAVA_HOME="${BREW_PREFIX}/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home"
 export PATH="\$JAVA_HOME/bin:\$PATH"
 
 # CURSOR CLI (no sudo symlink into /usr/local/bin)
@@ -93,8 +52,8 @@ export PATH="/Applications/Cursor.app/Contents/Resources/app/bin:\$PATH"
 
 # NVM
 export NVM_DIR="\$HOME/.nvm"
-[ -s "${DETECTED_BREW_PREFIX}/opt/nvm/nvm.sh" ] && \\. "${DETECTED_BREW_PREFIX}/opt/nvm/nvm.sh"
-[ -s "${DETECTED_BREW_PREFIX}/opt/nvm/etc/bash_completion.d/nvm" ] && \\. "${DETECTED_BREW_PREFIX}/opt/nvm/etc/bash_completion.d/nvm"
+[ -s "${BREW_PREFIX}/opt/nvm/nvm.sh" ] && \\. "${BREW_PREFIX}/opt/nvm/nvm.sh"
+[ -s "${BREW_PREFIX}/opt/nvm/etc/bash_completion.d/nvm" ] && \\. "${BREW_PREFIX}/opt/nvm/etc/bash_completion.d/nvm"
 
 source \${HOME}/.zsh/custom/plugins/powerlevel10k/powerlevel10k.zsh-theme
 source \${HOME}/.zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
@@ -125,8 +84,6 @@ ZSH_HIGHLIGHT_STYLES[reserved-word]=fg=red,bold
 
 unalias -a
 
-export MAC_SETUP_ROOT="${MAC_SETUP_ROOT}"
-DETECTED_PYTHON_PATH="${DETECTED_PYTHON_PATH}"
 [[ -f \${HOME}/.zsh/custom/commands.zsh ]] && source \${HOME}/.zsh/custom/commands.zsh
 
 shell-help() {
