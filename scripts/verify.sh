@@ -8,6 +8,11 @@
 
 set -euo pipefail
 
+# Source the shared package manifest (single source of truth, shared with setup.sh)
+VERIFY_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=../lib/packages.sh
+source "${VERIFY_SCRIPT_DIR}/../lib/packages.sh"
+
 # Colors for output
 if [[ -t 1 ]]; then
     GREEN='\033[0;32m'
@@ -63,37 +68,8 @@ echo ""
 
 # Check Homebrew Formulas
 echo "Checking Homebrew Formulas..."
-FORMULAS=(
-    crane
-    direnv
-    docker-compose
-    gemini-cli
-    gh
-    gradle
-    helm
-    htop
-    imagemagick
-    jq
-    kcat
-    kubectl
-    kubectx
-    minikube
-    node
-    nvm
-    ollama
-    openjdk@21
-    shellcheck
-    shfmt
-    skopeo
-    stern
-    terraform
-    uv
-    watch
-    yarn
-    yq
-)
-
-for formula in "${FORMULAS[@]}"; do
+for pkg in "${BREW_FORMULAE[@]}"; do
+    formula="$(pkg_name "$pkg")"
     if brew list --formula "$formula" &>/dev/null; then
         check_pass "Formula: $formula"
     else
@@ -104,28 +80,8 @@ echo ""
 
 # Check Homebrew Casks
 echo "Checking Homebrew Casks..."
-CASKS=(
-    alt-tab
-    claude-code
-    cursor
-    devtoys
-    docker
-    espanso
-    firefox
-    font-hack-nerd-font
-    gcloud-cli
-    intellij-idea-ce
-    iterm2
-    lens
-    logi-options+
-    lulu
-    postman
-    raycast
-    webstorm
-    zed
-)
-
-for cask in "${CASKS[@]}"; do
+for pkg in "${BREW_CASKS[@]}"; do
+    cask="$(pkg_name "$pkg")"
     if brew list --cask "$cask" &>/dev/null; then
         check_pass "Cask: $cask"
     else
