@@ -29,7 +29,6 @@ pkg_desc() {
 BREW_FORMULAE=(
   "crane|copy and inspect container images without a Docker daemon"
   "direnv|load per-project environment variables from .envrc files"
-  "docker-compose|define and run multi-container apps from compose.yaml"
   "fzf|fuzzy finder for files, history, git branches, and more"
   "gemini-cli|Google Gemini AI assistant in the terminal"
   "gh|GitHub CLI for PRs, issues, repos, and Actions"
@@ -47,6 +46,7 @@ BREW_FORMULAE=(
   "ollama|run local large language models on your machine"
   "openjdk@21|Java 21 development kit for JVM-based projects"
   "opentofu|open-source Terraform fork (tofu) for infrastructure as code"
+  "podman|daemonless container engine, drop-in replacement for the Docker CLI"
   "ripgrep|fast recursive code and text search (rg)"
   "shellcheck|static analysis and linting for shell scripts"
   "shfmt|auto-format shell scripts for consistent style"
@@ -59,10 +59,10 @@ BREW_FORMULAE=(
 
 # Homebrew casks (GUI apps, fonts, etc.)
 BREW_CASKS=(
-  "alt-tab|Windows-style window switcher showing all app windows"
+  "bettercmdtab|Better command tab completion for the terminal"
   "claude-code|Anthropic AI coding agent for the terminal"
+  "claude|Anthropic's official Claude AI desktop app"
   "cursor|AI-native code editor based on VS Code"
-  "docker|Docker Desktop for running and managing containers"
   "espanso|system-wide text expander for snippets and shortcuts"
   "font-hack-nerd-font|Hack font with icon glyphs for terminal prompts"
   "gcloud-cli|Google Cloud SDK for GCP auth, deploy, and storage"
@@ -70,6 +70,7 @@ BREW_CASKS=(
   "lens|GUI for browsing and managing Kubernetes clusters"
   "logi-options+|configure Logitech mice and keyboards"
   "lulu|outbound firewall that alerts on network connections"
+  "podman-desktop|Podman Desktop for running and managing containers"
   "postman|GUI client for testing REST and other HTTP APIs"
   "raycast|launcher and productivity hub replacing Spotlight"
   "slack|chat and messaging app for team collaboration"

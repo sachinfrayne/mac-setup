@@ -40,9 +40,6 @@ setopt SHARE_HISTORY
 # NODE
 export NODE_OPTIONS="--no-deprecation"
 
-# DOCKER
-export PATH="\$PATH:/Applications/Docker.app/Contents/Resources/bin/"
-
 # JAVA (Homebrew OpenJDK 21; no sudo symlink into /Library/Java)
 export JAVA_HOME="${BREW_PREFIX}/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home"
 export PATH="\$JAVA_HOME/bin:\$PATH"
