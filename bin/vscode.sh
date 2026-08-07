@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Cursor CLI bootstrap: PATH, Node deprecation noise, extensions, user snippets,
+# VS Code CLI bootstrap: PATH, Node deprecation noise, extensions, user snippets,
 # settings, and keybindings. Safe to source from zshrc (uses return on failure).
 #
 
@@ -19,34 +19,34 @@ if [[ "${MAC_SETUP_VERBOSE:-0}" != "1" ]]; then
 	fi
 fi
 
-export PATH="/Applications/Cursor.app/Contents/Resources/app/bin:$PATH"
+export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
 
-if ! command -v cursor &>/dev/null; then
-	echo "Cursor CLI not found. Install the Cursor app (brew install --cask cursor)."
+if ! command -v code &>/dev/null; then
+	echo "VS Code CLI not found. Install VS Code (brew install --cask visual-studio-code)."
 	return 1 2>/dev/null || exit 1
 fi
 
 mapfile -t EXTENSIONS < <(
 	if [[ "${MAC_SETUP_VERBOSE:-0}" == "1" ]]; then
-		cursor --list-extensions
+		code --list-extensions
 	else
-		NODE_OPTIONS="--no-deprecation" cursor --list-extensions
+		NODE_OPTIONS="--no-deprecation" code --list-extensions
 	fi | tr '[:upper:]' '[:lower:]'
 )
 
-cursor_install_extension() {
+vscode_install_extension() {
 	local ext="$1" installed
 	for installed in "${EXTENSIONS[@]}"; do
 		[[ "$installed" == "$ext" ]] && return 0
 	done
 	if [[ "${MAC_SETUP_VERBOSE:-0}" == "1" ]]; then
-		cursor --install-extension "$ext" || true
+		code --install-extension "$ext" || true
 	else
-		NODE_OPTIONS="--no-deprecation" cursor --install-extension "$ext" || true
+		NODE_OPTIONS="--no-deprecation" code --install-extension "$ext" || true
 	fi
 }
 
-CURSOR_EXTENSIONS=(
+VSCODE_EXTENSIONS=(
 	hashicorp.terraform
 	lucien-martijn.parquet-visualizer
 	ms-python.python
@@ -54,59 +54,60 @@ CURSOR_EXTENSIONS=(
 	redhat.java
 	streetsidesoftware.code-spell-checker
 	yzhang.markdown-all-in-one
+    saoudrizwan.claude-dev
 )
-for ext in "${CURSOR_EXTENSIONS[@]}"; do
-	cursor_install_extension "$ext"
+for ext in "${VSCODE_EXTENSIONS[@]}"; do
+	vscode_install_extension "$ext"
 done
 
-CURSOR_USER="${HOME}/Library/Application Support/Cursor/User"
-mkdir -p "${CURSOR_USER}/snippets"
+VSCODE_USER="${HOME}/Library/Application Support/Code/User"
+mkdir -p "${VSCODE_USER}/snippets"
 
 MAC_SETUP_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")/.." && pwd)"
 WORKSPACE_ROOT="$(cd "${MAC_SETUP_ROOT}/.." && pwd)"
-CURSOR_SKILLS_SRC="${WORKSPACE_ROOT}/.cursor/skills"
-CURSOR_SKILLS_HOME="${HOME}/.cursor/skills"
-mkdir -p "${CURSOR_SKILLS_SRC}"
-if [[ -L "${CURSOR_SKILLS_HOME}" ]]; then
-	current_target="$(readlink "${CURSOR_SKILLS_HOME}")"
-	if [[ "${current_target}" != "${CURSOR_SKILLS_SRC}" ]]; then
-		rm "${CURSOR_SKILLS_HOME}"
-		ln -s "${CURSOR_SKILLS_SRC}" "${CURSOR_SKILLS_HOME}"
+VSCODE_SKILLS_SRC="${WORKSPACE_ROOT}/.vscode/skills"
+VSCODE_SKILLS_HOME="${HOME}/.vscode/skills"
+mkdir -p "${VSCODE_SKILLS_SRC}"
+if [[ -L "${VSCODE_SKILLS_HOME}" ]]; then
+	current_target="$(readlink "${VSCODE_SKILLS_HOME}")"
+	if [[ "${current_target}" != "${VSCODE_SKILLS_SRC}" ]]; then
+		rm "${VSCODE_SKILLS_HOME}"
+		ln -s "${VSCODE_SKILLS_SRC}" "${VSCODE_SKILLS_HOME}"
 	fi
-elif [[ -d "${CURSOR_SKILLS_HOME}" ]]; then
+elif [[ -d "${VSCODE_SKILLS_HOME}" ]]; then
 	shopt -s dotglob nullglob
-	for item in "${CURSOR_SKILLS_HOME}"/*; do
+	for item in "${VSCODE_SKILLS_HOME}"/*; do
 		base="$(basename "${item}")"
-		if [[ -e "${CURSOR_SKILLS_SRC}/${base}" ]]; then
+		if [[ -e "${VSCODE_SKILLS_SRC}/${base}" ]]; then
 			continue
 		fi
-		mv "${item}" "${CURSOR_SKILLS_SRC}/"
+		mv "${item}" "${VSCODE_SKILLS_SRC}/"
 	done
 	shopt -u dotglob nullglob
-	rmdir "${CURSOR_SKILLS_HOME}" 2>/dev/null || rm -rf "${CURSOR_SKILLS_HOME}"
-	ln -s "${CURSOR_SKILLS_SRC}" "${CURSOR_SKILLS_HOME}"
-elif [[ ! -e "${CURSOR_SKILLS_HOME}" ]]; then
-	ln -s "${CURSOR_SKILLS_SRC}" "${CURSOR_SKILLS_HOME}"
+	rmdir "${VSCODE_SKILLS_HOME}" 2>/dev/null || rm -rf "${VSCODE_SKILLS_HOME}"
+	ln -s "${VSCODE_SKILLS_SRC}" "${VSCODE_SKILLS_HOME}"
+elif [[ ! -e "${VSCODE_SKILLS_HOME}" ]]; then
+	ln -s "${VSCODE_SKILLS_SRC}" "${VSCODE_SKILLS_HOME}"
 fi
 
-WORDLIST="${CURSOR_USER}/cspell-user-words.txt"
+WORDLIST="${VSCODE_USER}/cspell-user-words.txt"
 touch "$WORDLIST"
 if [[ ! -s "$WORDLIST" ]]; then
 	printf '# One word per line; add entries here as needed.\n' >>"$WORDLIST"
 fi
 
-CURSOR_SEED_WORDS="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)/cursor/cspell-seed-words.txt"
-if [[ ! -f "$CURSOR_SEED_WORDS" ]]; then
-	echo "cursor.sh: seed words file not found: $CURSOR_SEED_WORDS" >&2
+VSCODE_SEED_WORDS="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)/vscode/cspell-seed-words.txt"
+if [[ ! -f "$VSCODE_SEED_WORDS" ]]; then
+	echo "vscode.sh: seed words file not found: $VSCODE_SEED_WORDS" >&2
 	# shellcheck disable=SC2317
 	return 1 2>/dev/null || exit 1
 fi
 while IFS= read -r line || [[ -n "$line" ]]; do
 	[[ -z "$line" || "$line" =~ ^# ]] && continue
 	grep -qxF -- "$line" "$WORDLIST" 2>/dev/null || printf '%s\n' "$line" >>"$WORDLIST"
-done <"$CURSOR_SEED_WORDS"
+done <"$VSCODE_SEED_WORDS"
 
-tee_out "${CURSOR_USER}/snippets/bash-file-header.code-snippets" <<'EOF'
+tee_out "${VSCODE_USER}/snippets/bash-file-header.code-snippets" <<'EOF'
 {
   "Bash File Header": {
     "prefix": ["bash"],
@@ -115,7 +116,7 @@ tee_out "${CURSOR_USER}/snippets/bash-file-header.code-snippets" <<'EOF'
 }
 EOF
 
-tee_out "${CURSOR_USER}/settings.json" <<'EOF'
+tee_out "${VSCODE_USER}/settings.json" <<'EOF'
 {
   "diffEditor.ignoreTrimWhitespace": false,
   "editor.formatOnSave": true,
@@ -128,12 +129,12 @@ tee_out "${CURSOR_USER}/settings.json" <<'EOF'
   "workbench.editorAssociations": {"*.csv": "default"},
   "cSpell.dictionaryDefinitions": [
     {
-      "name": "cursor-user-words",
-      "path": "${userHome}/Library/Application Support/Cursor/User/cspell-user-words.txt",
+      "name": "vscode-user-words",
+      "path": "${userHome}/Library/Application Support/Code/User/cspell-user-words.txt",
       "addWords": true
     }
   ],
-  "cSpell.dictionaries": ["cursor-user-words"],
+  "cSpell.dictionaries": ["vscode-user-words"],
   "python.defaultInterpreterPath": "/opt/homebrew/bin/python3",
   "workbench.iconTheme": "vscode-icons",
   "[json]": {"editor.defaultFormatter": "esbenp.prettier-vscode"},
@@ -148,7 +149,7 @@ tee_out "${CURSOR_USER}/settings.json" <<'EOF'
 }
 EOF
 
-tee_out "${CURSOR_USER}/keybindings.json" <<'EOF'
+tee_out "${VSCODE_USER}/keybindings.json" <<'EOF'
 [
   {
     "key": "shift+cmd+c",
