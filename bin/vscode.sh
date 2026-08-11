@@ -47,14 +47,16 @@ vscode_install_extension() {
 }
 
 VSCODE_EXTENSIONS=(
+	esbenp.prettier-vscode
 	hashicorp.terraform
 	lucien-martijn.parquet-visualizer
+	ms-python.black-formatter
 	ms-python.python
 	ms-vscode.makefile-tools
 	redhat.java
+	saoudrizwan.claude-dev
 	streetsidesoftware.code-spell-checker
 	yzhang.markdown-all-in-one
-    saoudrizwan.claude-dev
 )
 for ext in "${VSCODE_EXTENSIONS[@]}"; do
 	vscode_install_extension "$ext"
@@ -138,6 +140,7 @@ tee_out "${VSCODE_USER}/settings.json" <<'EOF'
   "python.defaultInterpreterPath": "/opt/homebrew/bin/python3",
   "workbench.iconTheme": "vscode-icons",
   "[json]": {"editor.defaultFormatter": "esbenp.prettier-vscode"},
+  "[python]": {"editor.defaultFormatter": "ms-python.black-formatter"},
   "[terraform]": {"editor.defaultFormatter": "hashicorp.terraform"},
   "[yaml]": {"editor.defaultFormatter": "esbenp.prettier-vscode"},
   "[makefile]": {

@@ -12,6 +12,7 @@ iterm2
 jacoco
 jingra
 logi
+metabase
 nodepool
 opensearch
 oversample

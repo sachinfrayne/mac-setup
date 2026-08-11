@@ -80,7 +80,7 @@ if [[ "${DRY_RUN}" != "1" ]]; then
 fi
 
 if [[ "${MAC_SETUP_VERBOSE}" != "1" ]]; then
-	# Keep Node-based tools quiet (Cursor CLI, etc.) unless explicitly verbose.
+	# Keep Node-based tools quiet unless explicitly verbose.
 	export NODE_NO_WARNINGS=1
 	if [[ -n "${NODE_OPTIONS:-}" ]]; then
 		export NODE_OPTIONS="${NODE_OPTIONS} --no-deprecation"

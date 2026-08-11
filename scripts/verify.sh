@@ -111,12 +111,6 @@ else
     check_warn "Zed config directory missing"
 fi
 
-if [[ -d "${HOME}/Library/Application Support/Cursor/User" ]]; then
-    check_pass "Cursor config directory exists"
-else
-    check_warn "Cursor config directory missing"
-fi
-
 if [[ -d "${HOME}/Library/Application Support/espanso" ]]; then
     check_pass "Espanso config directory exists"
 else
@@ -234,20 +228,6 @@ if [[ -f "${HOME}/.zshrc" ]]; then
     else
         check_warn ".zshrc doesn't source commands.zsh"
     fi
-fi
-
-echo ""
-
-# Check Cursor Skills Symlink
-echo "Checking Cursor Skills..."
-
-if [[ -L "${HOME}/.cursor/skills" ]]; then
-    target="$(readlink "${HOME}/.cursor/skills")"
-    check_pass "Cursor skills symlink exists -> $target"
-elif [[ -d "${HOME}/.cursor/skills" ]]; then
-    check_warn "Cursor skills is a directory (not a symlink)"
-else
-    check_info "Cursor skills directory not set up"
 fi
 
 echo ""

@@ -44,9 +44,6 @@ export NODE_OPTIONS="--no-deprecation"
 export JAVA_HOME="${BREW_PREFIX}/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home"
 export PATH="\$JAVA_HOME/bin:\$PATH"
 
-# CURSOR CLI (no sudo symlink into /usr/local/bin)
-export PATH="/Applications/Cursor.app/Contents/Resources/app/bin:\$PATH"
-
 # NVM
 export NVM_DIR="\$HOME/.nvm"
 [ -s "${BREW_PREFIX}/opt/nvm/nvm.sh" ] && \\. "${BREW_PREFIX}/opt/nvm/nvm.sh"

@@ -61,7 +61,7 @@ Already in `setup.sh`: `ripgrep`, `fzf`, `k9s`, `mkcert`, `httpie`, `stern`, `sh
 | `ngrok` / `cloudflare-tunnel`   | Expose localhost for webhooks and OAuth callbacks        |
 | `insomnia`                      | API client alternative to Postman                        |
 | `orbstack`                      | Docker Desktop alternative — faster, lower RAM; pick one |
-| `visual-studio-code`            | Fallback editor when Cursor is not the right tool        |
+| `visual-studio-code`            | Primary editor                                           |
 | `firefox`                       | Second browser for testing and separate profiles         |
 | `devtoys`                       | GUI dev utilities — JSON, YAML, base64, hashing          |
 | `intellij-idea-ce`              | Full Java/Kotlin IDE                                     |
