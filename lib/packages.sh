@@ -27,8 +27,11 @@ pkg_desc() {
 
 # Homebrew formulae (CLI tools)
 BREW_FORMULAE=(
+  "awscli|AWS CLI for managing Amazon Web Services resources"
+  "azure-cli|Azure CLI for managing Microsoft Azure resources"
   "crane|copy and inspect container images without a Docker daemon"
   "direnv|load per-project environment variables from .envrc files"
+  "eza|modern ls replacement with icons and git status"
   "fzf|fuzzy finder for files, history, git branches, and more"
   "gemini-cli|Google Gemini AI assistant in the terminal"
   "gh|GitHub CLI for PRs, issues, repos, and Actions"
@@ -39,6 +42,7 @@ BREW_FORMULAE=(
   "k9s|terminal UI for browsing and managing Kubernetes clusters"
   "kubectl|official CLI for controlling Kubernetes clusters"
   "kubectx|fast switching between Kubernetes contexts and namespaces"
+  "kustomize|customize raw Kubernetes YAML configs without templating"
   "minikube|run a local single-node Kubernetes cluster for development"
   "mkcert|create locally trusted HTTPS certificates for localhost dev"
   "node|Node.js runtime for JavaScript and TypeScript tooling"
@@ -75,5 +79,4 @@ BREW_CASKS=(
   "raycast|launcher and productivity hub replacing Spotlight"
   "slack|chat and messaging app for team collaboration"
   "tableplus|GUI for querying Postgres, MySQL, Redis, and other databases"
-  "zed|fast Rust-based code editor with collaborative features"
 )

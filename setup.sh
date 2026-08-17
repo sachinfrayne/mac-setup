@@ -79,6 +79,10 @@ if [[ "${DRY_RUN}" != "1" ]]; then
 	fi
 fi
 
+# Homebrew's "ask" mode prompts "Do you want to proceed with the installation? [y/n]"
+# before every install/upgrade; this is unattended, so skip those prompts.
+export HOMEBREW_NO_ASK=1
+
 if [[ "${MAC_SETUP_VERBOSE}" != "1" ]]; then
 	# Keep Node-based tools quiet unless explicitly verbose.
 	export NODE_NO_WARNINGS=1

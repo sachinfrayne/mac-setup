@@ -21,8 +21,10 @@ if ! gcloud auth list --filter=status:ACTIVE --format="value(account)" 2>/dev/nu
     log "WARNING: No active gcloud authentication found. Run 'gcloud auth login' to authenticate."
 fi
 
-if [[ "${MAC_SETUP_VERBOSE:-0}" == "1" ]]; then
-	gcloud components install gke-gcloud-auth-plugin
-else
-	gcloud components install gke-gcloud-auth-plugin >/dev/null 2>&1
+if ! gcloud components list --filter="id:gke-gcloud-auth-plugin AND state.name:Installed" --format="value(id)" 2>/dev/null | grep -q .; then
+	if [[ "${MAC_SETUP_VERBOSE:-0}" == "1" ]]; then
+		gcloud components install gke-gcloud-auth-plugin --quiet
+	else
+		gcloud components install gke-gcloud-auth-plugin --quiet >/dev/null 2>&1
+	fi
 fi
