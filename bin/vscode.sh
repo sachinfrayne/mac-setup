@@ -50,6 +50,7 @@ VSCODE_EXTENSIONS=(
 	esbenp.prettier-vscode
 	hashicorp.terraform
 	lucien-martijn.parquet-visualizer
+	ms-kubernetes-tools.vscode-kubernetes-tools
 	ms-python.black-formatter
 	ms-python.python
 	ms-vscode.makefile-tools
