@@ -61,6 +61,12 @@ BREW_FORMULAE=(
   "yq|query and edit YAML like jq does for JSON"
 )
 
+# Python packages installed into the Homebrew system Python via uv (for
+# ad-hoc scripts, not project-scoped venvs). Each entry is "name|import name".
+PYTHON_PACKAGES=(
+  "openpyxl|openpyxl" # read/write .xlsx spreadsheets from scripts
+)
+
 # Homebrew casks (GUI apps, fonts, etc.)
 BREW_CASKS=(
   "bettercmdtab|Better command tab completion for the terminal"
@@ -72,6 +78,7 @@ BREW_CASKS=(
   "gcloud-cli|Google Cloud SDK for GCP auth, deploy, and storage"
   "iterm2|feature-rich terminal emulator with splits and profiles"
   "lens|GUI for browsing and managing Kubernetes clusters"
+  "libreoffice|free office suite (Calc, Writer, Impress) with real .xlsx round-tripping"
   "logi-options+|configure Logitech mice and keyboards"
   "lulu|outbound firewall that alerts on network connections"
   "podman-desktop|Podman Desktop for running and managing containers"

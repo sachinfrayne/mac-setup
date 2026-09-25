@@ -90,6 +90,22 @@ for pkg in "${BREW_CASKS[@]}"; do
 done
 echo ""
 
+# Check Python Packages (installed into the Homebrew system Python via uv)
+echo "Checking Python Packages..."
+# shellcheck source=../lib/common.sh
+source "${VERIFY_SCRIPT_DIR}/../lib/common.sh"
+PYTHON_BIN="$(get_python3_path)"
+for pkg in "${PYTHON_PACKAGES[@]}"; do
+    name="$(pkg_name "$pkg")"
+    import_name="$(pkg_desc "$pkg")"
+    if [[ -n "${PYTHON_BIN}" ]] && "${PYTHON_BIN}" -c "import ${import_name}" &>/dev/null; then
+        check_pass "Python package: $name"
+    else
+        check_fail "Python package missing: $name"
+    fi
+done
+echo ""
+
 # Check Configuration Files
 echo "Checking Configuration Files..."
 

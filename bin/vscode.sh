@@ -48,6 +48,7 @@ vscode_install_extension() {
 
 VSCODE_EXTENSIONS=(
 	esbenp.prettier-vscode
+	grapecity.gc-excelviewer
 	hashicorp.terraform
 	lucien-martijn.parquet-visualizer
 	ms-kubernetes-tools.vscode-kubernetes-tools

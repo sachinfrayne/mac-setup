@@ -11,12 +11,33 @@ if ! declare -F log >/dev/null 2>&1; then
 	log() { :; }
 fi
 
+if [[ -z "${MAC_SETUP_ROOT:-}" ]]; then
+	MAC_SETUP_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+fi
+
 CLAUDE_DIR="$HOME/.claude"
 SETTINGS_FILE="$CLAUDE_DIR/settings.json"
 STATUSLINE_SCRIPT="$CLAUDE_DIR/statusline-command.sh"
+GLOBAL_CLAUDE_MD_SRC="${MAC_SETUP_ROOT}/bin/claude/CLAUDE.md"
+GLOBAL_CLAUDE_MD="$CLAUDE_DIR/CLAUDE.md"
 
 # Create .claude directory if it doesn't exist
 mkdir -p "$CLAUDE_DIR"
+
+# Symlink the repo-tracked global instructions file into place, backing up
+# any pre-existing non-symlink file instead of clobbering it.
+if [[ -L "$GLOBAL_CLAUDE_MD" ]]; then
+	if [[ "$(readlink "$GLOBAL_CLAUDE_MD")" != "$GLOBAL_CLAUDE_MD_SRC" ]]; then
+		rm "$GLOBAL_CLAUDE_MD"
+		ln -s "$GLOBAL_CLAUDE_MD_SRC" "$GLOBAL_CLAUDE_MD"
+	fi
+elif [[ -e "$GLOBAL_CLAUDE_MD" ]]; then
+	mv "$GLOBAL_CLAUDE_MD" "$GLOBAL_CLAUDE_MD.bak"
+	log "Backed up existing $GLOBAL_CLAUDE_MD to $GLOBAL_CLAUDE_MD.bak"
+	ln -s "$GLOBAL_CLAUDE_MD_SRC" "$GLOBAL_CLAUDE_MD"
+else
+	ln -s "$GLOBAL_CLAUDE_MD_SRC" "$GLOBAL_CLAUDE_MD"
+fi
 
 # Create or update settings.json with status line configuration
 cat > "$SETTINGS_FILE" <<'EOF'
@@ -59,3 +80,4 @@ chmod +x "$STATUSLINE_SCRIPT"
 log "Claude Code configured:"
 log "  - settings: $SETTINGS_FILE"
 log "  - statusline: $STATUSLINE_SCRIPT"
+log "  - global instructions: $GLOBAL_CLAUDE_MD -> $GLOBAL_CLAUDE_MD_SRC"
