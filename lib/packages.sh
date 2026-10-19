@@ -52,6 +52,7 @@ BREW_FORMULAE=(
   "opentofu|open-source Terraform fork (tofu) for infrastructure as code"
   "podman|daemonless container engine, drop-in replacement for the Docker CLI"
   "ripgrep|fast recursive code and text search (rg)"
+  "sf|Salesforce CLI for orgs, metadata, data, and SOQL queries"
   "shellcheck|static analysis and linting for shell scripts"
   "shfmt|auto-format shell scripts for consistent style"
   "skopeo|inspect, copy, and sign container images across registries"
