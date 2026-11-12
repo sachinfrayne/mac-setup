@@ -104,9 +104,30 @@ log() {
   fi
 }
 
+# Copy an existing file to <file>.bak.<timestamp> before it is overwritten.
+# Symlinks are followed, so the target of a symlinked config is backed up too.
+# Usage: backup_existing <file>
+backup_existing() {
+  local file="$1"
+  if [[ -f "${file}" ]]; then
+    # Never overwrite an earlier backup: add a counter if the name is taken.
+    local stamp backup n=1
+    stamp="$(date +%Y%m%d-%H%M%S)"
+    backup="${file}.bak.${stamp}"
+    while [[ -e "${backup}" ]]; do
+      backup="${file}.bak.${stamp}-${n}"
+      n=$((n + 1))
+    done
+    cp -pL "${file}" "${backup}"
+    log "Backed up ${file} to ${backup}"
+  fi
+}
+
 # Tee to a file, optionally silencing stdout unless verbose
+# Backs up the file first if it already exists.
 # Usage: tee_out <file> [tee_args...]
 tee_out() {
+  backup_existing "$1"
   if [[ "${MAC_SETUP_VERBOSE:-0}" == "1" ]]; then
     tee "$@"
   else

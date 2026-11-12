@@ -14,6 +14,8 @@ fi
 if [[ -z "${MAC_SETUP_ROOT:-}" ]]; then
 	MAC_SETUP_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 fi
+# shellcheck source=../lib/common.sh
+source "${MAC_SETUP_ROOT}/lib/common.sh"
 
 CLAUDE_DIR="$HOME/.claude"
 SETTINGS_FILE="$CLAUDE_DIR/settings.json"
@@ -40,6 +42,8 @@ else
 fi
 
 # Create or update settings.json with status line configuration
+# Back up an existing file first, since the whole file is rewritten below.
+backup_existing "$SETTINGS_FILE"
 cat > "$SETTINGS_FILE" <<'EOF'
 {
   "enabledPlugins": {
@@ -55,7 +59,8 @@ EOF
 export STATUSLINE_SCRIPT
 perl -0777 -i -pe 's|"__STATUSLINE_SCRIPT__"|"$ENV{STATUSLINE_SCRIPT}"|g' "$SETTINGS_FILE"
 
-# Create status line script
+# Create status line script, backing up any existing copy first
+backup_existing "$STATUSLINE_SCRIPT"
 cat > "$STATUSLINE_SCRIPT" <<'EOF'
 #!/usr/bin/env bash
 

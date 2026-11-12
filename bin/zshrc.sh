@@ -16,6 +16,8 @@ source "${ZSHRC_DIR}/ensure_command_descriptions.sh"
 ensure_command_descriptions "${ALIASES_AND_FUNCTIONS_FILE}"
 
 mkdir -p "${HOME}/.zsh/custom"
+backup_existing "${HOME}/.zsh/custom/commands.zsh"
+backup_existing "${HOME}/.zshrc"
 sed \
 	-e "s|__MAC_SETUP_ROOT__|${MAC_SETUP_ROOT}|g" \
 	-e "s|__DETECTED_PYTHON_PATH__|$(get_python3_path)|g" \
