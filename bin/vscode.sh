@@ -49,6 +49,7 @@ vscode_install_extension() {
 VSCODE_EXTENSIONS=(
 	cweijan.vscode-office
 	esbenp.prettier-vscode
+	hediet.vscode-drawio
 	formulahendry.code-runner
 	hashicorp.terraform
 	lucien-martijn.parquet-visualizer
@@ -67,33 +68,6 @@ done
 
 VSCODE_USER="${HOME}/Library/Application Support/Code/User"
 mkdir -p "${VSCODE_USER}/snippets"
-
-MAC_SETUP_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")/.." && pwd)"
-WORKSPACE_ROOT="$(cd "${MAC_SETUP_ROOT}/.." && pwd)"
-VSCODE_SKILLS_SRC="${WORKSPACE_ROOT}/.vscode/skills"
-VSCODE_SKILLS_HOME="${HOME}/.vscode/skills"
-mkdir -p "${VSCODE_SKILLS_SRC}"
-if [[ -L "${VSCODE_SKILLS_HOME}" ]]; then
-	current_target="$(readlink "${VSCODE_SKILLS_HOME}")"
-	if [[ "${current_target}" != "${VSCODE_SKILLS_SRC}" ]]; then
-		rm "${VSCODE_SKILLS_HOME}"
-		ln -s "${VSCODE_SKILLS_SRC}" "${VSCODE_SKILLS_HOME}"
-	fi
-elif [[ -d "${VSCODE_SKILLS_HOME}" ]]; then
-	shopt -s dotglob nullglob
-	for item in "${VSCODE_SKILLS_HOME}"/*; do
-		base="$(basename "${item}")"
-		if [[ -e "${VSCODE_SKILLS_SRC}/${base}" ]]; then
-			continue
-		fi
-		mv "${item}" "${VSCODE_SKILLS_SRC}/"
-	done
-	shopt -u dotglob nullglob
-	rmdir "${VSCODE_SKILLS_HOME}" 2>/dev/null || rm -rf "${VSCODE_SKILLS_HOME}"
-	ln -s "${VSCODE_SKILLS_SRC}" "${VSCODE_SKILLS_HOME}"
-elif [[ ! -e "${VSCODE_SKILLS_HOME}" ]]; then
-	ln -s "${VSCODE_SKILLS_SRC}" "${VSCODE_SKILLS_HOME}"
-fi
 
 WORDLIST="${VSCODE_USER}/cspell-user-words.txt"
 touch "$WORDLIST"

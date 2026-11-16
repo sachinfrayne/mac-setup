@@ -11,6 +11,8 @@ source "${MAC_SETUP_ROOT}/lib/common.sh"
 ZSHRC_DIR="${MAC_SETUP_ROOT}/bin/zshrc"
 ALIASES_AND_FUNCTIONS_FILE="${ZSHRC_DIR}/aliases_and_functions.sh"
 
+# shellcheck source=../lib/packages.sh
+source "${MAC_SETUP_ROOT}/lib/packages.sh"
 # shellcheck source=zshrc/ensure_command_descriptions.sh
 source "${ZSHRC_DIR}/ensure_command_descriptions.sh"
 ensure_command_descriptions "${ALIASES_AND_FUNCTIONS_FILE}"
@@ -22,6 +24,18 @@ sed \
 	-e "s|__MAC_SETUP_ROOT__|${MAC_SETUP_ROOT}|g" \
 	-e "s|__DETECTED_PYTHON_PATH__|$(get_python3_path)|g" \
 	"${ALIASES_AND_FUNCTIONS_FILE}" >"${HOME}/.zsh/custom/commands.zsh"
+
+# Installed tools (name and description lines) merged into the single sorted
+# list printed by `alias` (shell-help); generated from lib/packages.sh so it
+# always matches what mac-setup installs.
+{
+	for pkg in "${BREW_FORMULAE[@]}"; do
+		printf '  %-28s %s\n' "$(pkg_name "$pkg")" "$(pkg_desc "$pkg")"
+	done
+	for pkg in "${PYTHON_PACKAGES[@]}"; do
+		printf '  %-28s %s\n' "$(pkg_name "$pkg")" "Python package"
+	done
+} >"${HOME}/.zsh/custom/tools.txt"
 
 # Generate .zshrc with dynamic paths
 # Note: Using non-quoted EOF to allow variable expansion
@@ -83,17 +97,20 @@ unalias -a
 [[ -f \${HOME}/.zsh/custom/commands.zsh ]] && source \${HOME}/.zsh/custom/commands.zsh
 
 shell-help() {
-  echo "# aliases"
+  echo "# aliases and tools"
   local name desc_key
-  for name in \${(ko)aliases}; do
-    [[ \$name == *:desc ]] && continue
-    desc_key="\${name}:desc"
-    if (( \$+aliases[\$desc_key] )); then
-      printf '  %-28s %s\n' "\$name" "\${aliases[\$desc_key]}"
-    else
-      printf '  %-28s %s\n' "\$name" "(no description)"
-    fi
-  done
+  {
+    for name in \${(k)aliases}; do
+      [[ \$name == *:desc ]] && continue
+      desc_key="\${name}:desc"
+      if (( \$+aliases[\$desc_key] )); then
+        printf '  %-28s %s\n' "\$name" "\${aliases[\$desc_key]}"
+      else
+        printf '  %-28s %s\n' "\$name" "(no description)"
+      fi
+    done
+    [[ -f \${HOME}/.zsh/custom/tools.txt ]] && cat \${HOME}/.zsh/custom/tools.txt
+  } | sort
 }
 
 alias() {
